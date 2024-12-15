@@ -50,7 +50,7 @@ def status():
 
 @app.route("/")
 def index():
-    return {}
+    return render_template("index.html")
 
 
 @app.route("/users")
@@ -87,4 +87,17 @@ def messages():
     return render_template("messages.html", items=data)
 
 
-# /messages/add
+@app.route("/messages/add", methods=["GET", "POST"])
+def messages_add():
+    if request.method == "GET":
+        return render_template("messages-add.html")
+    if request.method == "POST":
+        message_content = request.form["content"]
+        message_priority = request.form["priority"]
+        message = Message(
+            content=message_content,
+            priority=message_priority,
+        )
+        db.session.add(message)
+        db.session.commit()
+        return render_template("messages-add.html", message="Message added")
