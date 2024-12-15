@@ -18,6 +18,8 @@ class User(db.Model):
     first_name = db.Column(db.String(150))
     last_name = db.Column(db.String(150))
     age = db.Column(db.Integer)
+    # location
+    # country
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     def __repr__(self):
