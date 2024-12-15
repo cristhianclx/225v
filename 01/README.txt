@@ -13,7 +13,7 @@ python -m venv .venv
 
 # install
 
-pip install -r requirements.txt
+pip install -r requirements.txt --upgrade
 
 # utils
 
@@ -21,3 +21,5 @@ pip install flask
 pip freeze
 
 # flask
+
+flask --app main run --reload
