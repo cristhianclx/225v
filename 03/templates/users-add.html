@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Users add</title>
+{% endblock %}
+
+{% block content %}
+    <h1>Users add </h1>
+
+    {% if message %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">First name</label>
+            <input type="text" class="form-control" name="first_name">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Last name</label>
+            <input type="text" class="form-control" name="last_name">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Age</label>
+            <input type="number" class="form-control" name="age">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Location</label>
+            <input type="text" class="form-control" name="location">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Country</label>
+            <input type="text" class="form-control" name="country">
+          </div>
+          <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+    {% endblock %}

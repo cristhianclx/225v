@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.sql import func
@@ -58,5 +58,33 @@ def users():
     data = User.query.all()
     return render_template("users.html", items=data)
 
-# /messages
-# /users/add
+
+@app.route("/users/add", methods=["GET", "POST"])
+def users_add():
+    if request.method == "GET":
+        return render_template("users-add.html")
+    if request.method == "POST":
+        user_first_name = request.form["first_name"]
+        user_last_name = request.form["last_name"]
+        user_age = request.form["age"]
+        user_location = request.form["location"]
+        user_country = request.form["country"]
+        user = User(
+            first_name=user_first_name,
+            last_name=user_last_name,
+            age=user_age,
+            location=user_location,
+            country=user_country
+        )
+        db.session.add(user)
+        db.session.commit()
+        return render_template("users-add.html", message="User added")
+
+
+@app.route("/messages")
+def messages():
+    data = Message.query.all()
+    return render_template("messages.html", items=data)
+
+
+# /messages/add
