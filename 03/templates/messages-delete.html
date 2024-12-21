@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Messages delete: {{ message.content }}</title>
+{% endblock %}
+
+{% block content %}
+    <h1>Message delete: {{ message.content }}</h1>
+    <a href="{{ url_for('messages') }}" class="btn btn-info">Messages</a>
+
+    <form method="POST">
+      <h2>Are you sure you want to delete message ({{ message.id }}): {{ message.content }}?</h2>
+      <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+    {% endblock %}

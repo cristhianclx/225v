@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 
 {% block title %}
-<title>Add message</title>
+<title>Edit message: {{ message.content }}</title>
 {% endblock %}
 
 {% block content %}
-    <h1>Add message</h1>
+    <h1>Edit message: {{ message.content }}</h1>
     <a href="{{ url_for('messages') }}" class="btn btn-info">Messages</a>
 
-    {% if message %}
+    {% if information %}
     <div class="alert alert-info alert-dismissible fade show" role="alert">
-        {{ message }}
+        {{ information }}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endif %}
@@ -18,20 +18,30 @@
     <form method="POST">
         <div class="mb-3">
             <label class="form-label">Content</label>
-            <input type="text" class="form-control" name="content">
+            <input type="text" class="form-control" name="content" value="{{ message.content }}">
           </div>
           <div class="mb-3">
             <label class="form-label">Priority</label>
-            <input type="text" class="form-control" name="priority">
+            <input type="text" class="form-control" name="priority" value="{{ message.priority }}">
           </div>
           <div class="mb-3">
             <label class="form-label">User ID</label>
-            <input type="text" class="form-control" name="user_id">
+            <input type="text" class="form-control" name="user_id" value="{{ message.user_id }}">
           </div>
           <div class="mb-3">
             <label class="form-label">Raw</label>
-            <textarea class="form-control" rows="3" name="raw"></textarea>
+            {% if message.raw %}
+            <textarea class="form-control" rows="3" name="raw" id="raw">{{ message.raw }}</textarea>
+            {% else %}
+            <textarea class="form-control" rows="3" name="raw" id="raw"></textarea>
+            {% endif %}
           </div>
+
           <button type="submit" class="btn btn-primary">Send</button>
     </form>
+    <script>
+      $(document).ready(function() {
+        $('#raw').summernote();
+      });
+    </script>
     {% endblock %}

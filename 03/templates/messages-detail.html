@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Detail message: {{ message.content }}</title>
+{% endblock %}
+
+{% block content %}
+    <h1>Detail message: {{ message.content }}</h1>
+    <a href="{{ url_for('messages') }}" class="btn btn-info">Messages</a>
+
+    <form>
+      <fieldset disabled>
+        <div class="mb-3">
+            <label class="form-label">Content</label>
+            <input type="text" class="form-control" name="content" value="{{ message.content }}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Priority</label>
+            <input type="text" class="form-control" name="priority" value="{{ message.priority }}">
+          </div>
+      </fieldset>
+    </form>
+    {% endblock %}

@@ -34,8 +34,12 @@ class Message(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     content = db.Column(db.String(255))
+    raw = db.Column(db.Text, nullable=True)
     priority = db.Column(db.String(10))
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user = db.relationship("User", backref="user")
 
     def __repr__(self):
         return "<Message: {}>".format(self.id)
@@ -114,6 +118,13 @@ def users_delete_by_id(id):
         return redirect(url_for('users'))
 
 
+@app.route("/users/<id>/messages")
+def messages_by_user_id(id):
+    user = User.query.get_or_404(id)
+    data = Message.query.filter_by(user = user).all()
+    return render_template("users-messages.html", user=user, items=data)
+
+
 @app.route("/messages")
 def messages():
     data = Message.query.all()
@@ -127,15 +138,46 @@ def messages_add():
     if request.method == "POST":
         message_content = request.form["content"]
         message_priority = request.form["priority"]
+        message_user_id = request.form["user_id"]
+        message_raw = request.form["raw"]
         message = Message(
             content=message_content,
             priority=message_priority,
+            user_id=message_user_id,
+            raw=message_raw,
         )
         db.session.add(message)
         db.session.commit()
         return render_template("messages-add.html", message="Message added")
 
 
-# /messages/1 # detalle de un mensaje
-# /messages/edit/1 # editar un mensaje
-# /messages/delete/1 # borrar un mensaje
+@app.route("/messages/<id>")
+def messages_by_id(id):
+    message = Message.query.get_or_404(id)
+    return render_template("messages-detail.html", message=message)
+
+
+@app.route("/messages/edit/<id>", methods=["GET", "POST"])
+def messages_edit_by_id(id):
+    message = Message.query.get_or_404(id)
+    if request.method == "GET":
+        return render_template("messages-edit.html", message=message)
+    if request.method == "POST":
+        message.content = request.form["content"]
+        message.priority = request.form["priority"]
+        message.user_id = request.form["user_id"]
+        message.raw = request.form["raw"]
+        db.session.add(message)
+        db.session.commit()
+        return render_template("messages-edit.html", message=message, information="Message edited")
+
+
+@app.route("/messages/delete/<id>", methods=["GET", "POST"])
+def messages_delete_by_id(id):
+    message = Message.query.get_or_404(id)
+    if request.method == "GET":
+        return render_template("messages-delete.html", message=message)
+    if request.method == "POST":
+        db.session.delete(message)
+        db.session.commit()
+        return redirect(url_for('messages'))
