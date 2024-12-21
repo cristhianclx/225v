@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.sql import func
@@ -81,6 +81,39 @@ def users_add():
         return render_template("users-add.html", message="User added")
 
 
+@app.route("/users/<id>")
+def users_by_id(id):
+    user = User.query.get_or_404(id)
+    return render_template("users-detail.html", user=user)
+
+
+@app.route("/users/edit/<id>", methods=["GET", "POST"])
+def users_edit_by_id(id):
+    user = User.query.get_or_404(id)
+    if request.method == "GET":
+        return render_template("users-edit.html", user=user)
+    if request.method == "POST":
+        user.first_name = request.form["first_name"]
+        user.last_name = request.form["last_name"]
+        user.age = request.form["age"]
+        user.location = request.form["location"]
+        user.country = request.form["country"]
+        db.session.add(user)
+        db.session.commit()
+        return render_template("users-edit.html", user=user, message="User edited")
+
+
+@app.route("/users/delete/<id>", methods=["GET", "POST"])
+def users_delete_by_id(id):
+    user = User.query.get_or_404(id)
+    if request.method == "GET":
+        return render_template("users-delete.html", user=user)
+    if request.method == "POST":
+        db.session.delete(user)
+        db.session.commit()
+        return redirect(url_for('users'))
+
+
 @app.route("/messages")
 def messages():
     data = Message.query.all()
@@ -101,3 +134,8 @@ def messages_add():
         db.session.add(message)
         db.session.commit()
         return render_template("messages-add.html", message="Message added")
+
+
+# /messages/1 # detalle de un mensaje
+# /messages/edit/1 # editar un mensaje
+# /messages/delete/1 # borrar un mensaje

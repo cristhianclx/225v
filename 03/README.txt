@@ -42,3 +42,17 @@ flask --app main shell
 
 >>> from main import User, db
 >>> User.query.all()
+
+>>> from main import User, db
+>>> User.query.get_or_404(1) # User.query.filter_by(id = 1).first()
+
+>>> from main import User, db
+>>> user = User.query.get_or_404(1)
+>>> user.age = 34
+>>> db.session.add(user)
+>>> db.session.commit()
+
+>>> from main import User, db
+>>> user = User.query.get_or_404(2)
+>>> db.session.delete(user)
+>>> db.session.commit()
