@@ -1,0 +1,5 @@
+Flask==3.0.3
+Flask-Migrate
+flask-restful
+Flask-SQLAlchemy
+requests
