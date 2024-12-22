@@ -223,3 +223,16 @@ api.add_resource(MessageByUserIDResource, "/users/<int:id>/messages/")
 # { "content": "data 1", "raw": "data 1", "priority": "low" }
 api.add_resource(MessagesResource, "/messages/")
 api.add_resource(MessageIDResource, "/messages/<int:id>")
+
+# /users/
+# GET: todos los usuarios
+# POST: crear un usuario
+
+# /users/1
+# GET: detalles del usuario 1
+# PATCH: editar detalles del usuario 1
+# DELETE: borrar usuario 1
+
+# /users/1/messages/
+# GET: todos los mensajes del usuario 1
+# POST: crear un mensaje en el usuario 1 (*******)
