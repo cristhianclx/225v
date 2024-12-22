@@ -102,5 +102,8 @@ def protected():
 @jwt_required()
 def get_messages():
     current_user_first_name = get_jwt_identity()
-    # return all messages by user.first_name
+    user = User.query.filter_by(first_name = current_user_first_name).first()
+    if user:
+        items = Message.query.filter_by(user = user).all()
+        return messages_basic_schema.dump(items)
     return []
