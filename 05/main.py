@@ -126,9 +126,40 @@ class UserIDResource(Resource):
         return {}, 204
 
 
+class MessagesResource(Resource):
+    def get(self):
+        items = Message.query.all()
+        data = []
+        for item in items:
+            data.append({
+                "id": item.id,
+                "content": item.content,
+                "raw": item.raw,
+                "priority": item.priority,
+                "user_id": item.user_id,
+                "created_at": item.created_at.strftime("%Y-%m-%d %H:%M:%S")
+            })
+        return data
+
+
+    def post(self):
+        data = request.get_json()
+        item = Message(**data)
+        db.session.add(item)
+        db.session.commit()
+        return {
+            "id": item.id,
+            "content": item.content,
+            "raw": item.raw,
+            "priority": item.priority,
+            "user_id": item.user_id,
+            "created_at": item.created_at.strftime("%Y-%m-%d %H:%M:%S")
+        }, 201
+
+
 api.add_resource(IndexResource, "/")
 api.add_resource(UsersResource, "/users/")
 api.add_resource(UserIDResource, "/users/<int:id>")
+api.add_resource(MessagesResource, "/messages/")
 
-# /messages/ GET, POST
 # /messages/<id> GET, PATCH, DELETE
