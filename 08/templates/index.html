@@ -13,19 +13,28 @@
       socket.on("connect", function() {
         socket.emit("ws-welcome", {data: 'Connecting ...'});
         $("#form").on("submit", function(e) {
-          let user = $("#user").val()
-          let content = $("#content").val()
+          let user = $("#user").val();
+          let content = $("#content").val();
+          let importance = $("#importance").val();
+          let details = $("#details").val();
           socket.emit("ws-messages", {
             user: user,
             content: content,
+            importance: importance,
+            details: details,
           })
           $("#content").val("").focus();
           e.preventDefault();
         })
     })
     socket.on("ws-messages-responses", function(msg) {
-        $("#messages").append("<p><b>" + msg.user + ":</b> " + msg.content + "</p>")
-    })
+        if (msg.is_important) {
+            $("#messages").append("<p style='color: red;'><b>" + msg.user + ":</b> " + msg.content + " (" + msg.details + ")</p>");
+        } else {
+            $("#messages").append("<p><b>" + msg.user + ":</b> " + msg.content + " (" + msg.details + ")</p>");
+        }
+        $("#messages").append("<p><small>" + msg.created_at + "</small></p>");
+    });
     </script>
 </head>
   <body>
@@ -34,13 +43,23 @@
     <form method="POST" id="form">
         <input type="text" class="form-control" placeholder="User" id="user" />
         <input type="text" class="form-control" placeholder="Content" id="content" />
+        <select class="form-select" aria-label="Importance" id="importance">
+            <option value="LOW" selected>LOW</option>
+            <option value="HIGH">HIGH</option>
+          </select>
+        <input type="text" class="form-control" placeholder="Details" id="details" />
         <button type="submit" class="btn btn-primary">Send</button>
       </form>
     <hr>
     <h2>Messages</h2>
     <div id="messages">
       {% for message in messages %}
-      <p><b>{{ message.user }}:</b> {{ message.content }}</p>
+        {% if message.importance == "HIGH" %}
+        <p style="color: red;"><b>{{ message.user }}:</b> {{ message.content }} <small>({{ message.details }})</small></p>
+        {% else %}
+        <p><b>{{ message.user }}:</b> {{ message.content }} ({{ message.details }})</p>
+        {% endif %}
+        <p><small>{{ message.created_at.strftime("%Y-%m-%d %H:%M:%S") }}</small></p>
       {% endfor %}
     </div>
   </body>
