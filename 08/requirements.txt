@@ -1,0 +1,7 @@
+Flask==3.0.3
+flask-marshmallow
+Flask-Migrate
+flask-restful
+Flask-SQLAlchemy
+flask-socketio
+flask-restful
