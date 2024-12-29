@@ -24,7 +24,9 @@
             })
         })
         socket.on("ws-messages-{{ room.id }}", function(msg) {
+            console.log(msg);
             $("#messages").append("<p><b>" + msg.nickname + ":</b> " + msg.content + "</p>");
+            $("#messages").append("<p>" + msg.created_at + "</p>");
         })
     </script>
 </head>
@@ -41,6 +43,7 @@
     <div id="messages">
         {% for m in messages %}
         <p><b>{{ m.nickname }}:</b> {{ m.content }}</p>
+        <p>{{ m.created_at.strftime("%Y-%m-%d %H:%M:%S") }}</p>
         {% endfor %}
     </div>
   </body>
